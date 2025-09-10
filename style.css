@@ -1,0 +1,229 @@
+body {
+  font-family: Arial, sans-serif; 
+  background-color: #f5f5f5;
+  margin:0;
+  padding:0;
+  }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.focim {
+  font-size: calc(4vw + 20px);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  font-weight: bold;
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 20px;
+  background: linear-gradient(
+  210deg,
+  rgba(30,144,255,0.7),
+  rgba(75,0,130,0.7)
+);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 10s ease infinite;
+}
+
+.alcim {
+  font-size: calc(3vw + 10px);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  font-weight: bold;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 50px;
+  background: linear-gradient(
+  210deg,
+  rgba(75,0,130,0.7),
+  rgba(30,144,255,0.7)
+);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.controls input[type="file"] {
+  display: none;
+}
+
+.btn {
+  font-size: calc(0.7vw + 10px);
+  font-weight: 700;
+  line-height: 1.2;
+  font-family: Arial, sans-serif;
+  padding: 15px 10px;
+  border-radius: 6px;
+  border: black 2px solid; 
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  background:rgba(30,144,255,1);
+  color: #0b0b0b;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.7);
+  transition: transform 0.2s, background 0.2s;
+  width: 40%;
+}
+
+.controls .btn:nth-of-type(1) {
+  background: rgba(30,144,255,0.4);
+}
+.controls .btn:nth-of-type(1):hover {
+  background: rgba(30,144,255,1);
+}
+
+.controls .btn:nth-of-type(2) {
+  background: rgba(30, 98, 255, 0.6);
+}
+.controls .btn:nth-of-type(2):hover {
+  background: rgba(30, 98, 255,0.9);
+}
+
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+  }
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.page {
+  width: 210mm;
+/*   height: 297mm; */
+  padding: 5mm;
+  box-sizing: border-box;
+  border: black 1px solid;
+  display: grid;
+  grid-template-columns: repeat(3, 66mm);
+  grid-template-rows: repeat(8, 32mm);
+  gap: 1mm;
+  margin-top: 50px;
+}
+
+#labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.page:not(:last-child) {
+  page-break-after: always;
+}
+
+.label {
+  width: 66mm;
+  height: 32mm;
+  border: 1px solid #000000;
+  padding: 2mm;
+  font-family: Calibri, sans-serif;
+  font-size: 8.6pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-sizing: border-box;
+}
+.logo {
+  width: 60px;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+.line1 {
+  font-weight: bold;
+  font-family: Calibri, sans-serif;
+  font-size: 9.6pt;
+}
+.line2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Calibri, sans-serif;
+  font-weight: bold;
+  font-size: 9.6pt;
+  width: 100%;
+  overflow: visible;
+}
+
+.line2 .left {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kiszereles {
+  font-family: Calibri, sans-serif;
+  font-weight: bold;
+  font-size: 9.6pt;
+  position: absolute;
+  top: 26px;
+  right: 75px;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top:8px;
+}
+.price-box1 {
+  border: 0.5px solid black;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 10pt;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 0 5px;
+  font-weight: bold;
+}
+
+.price-box2 {
+  border: 0.5px solid black;
+  width: 100px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 10pt;
+  background-color: #fff;
+  box-sizing: border-box;
+  padding: 0 5px;
+  font-weight: normal;
+}
+
+.price-box1 .amount, .price-box2 .amount {
+  flex: 1;
+  font-size: 14pt;
+  text-align: center;
+}
+
+.price-box1 .unit, .price-box2 .unit {
+  text-align: right;
+  white-space: nowrap;
+}
+
+
+
+
+
