@@ -1,10 +1,23 @@
-let logoPath = "logo.png";
+function getSelectedLogo() {
+  const selectedType = document.querySelector('input[name="labelType"]:checked').value;
+  return selectedType === "A" ? "ea.png" : "hg.png";
+}
+
+document.querySelectorAll('input[name="labelType"]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    const fileInput = document.getElementById("excelFile");
+    if (fileInput.files.length > 0) {
+      handleFile({ target: fileInput }); // újrarendereli a címkéket a friss logóval
+    }
+  });
+});
 
 document.getElementById("excelFile").addEventListener("change", handleFile, false);
 
 function handleFile(e) {
   let file = e.target.files[0];
   let reader = new FileReader();
+  
   reader.onload = function(event) {
     let data = new Uint8Array(event.target.result);
     let workbook = XLSX.read(data, { type: 'array' });
@@ -14,6 +27,13 @@ function handleFile(e) {
     renderLabels(json);
   };
   reader.readAsArrayBuffer(file);
+}
+
+function formatPrice(price) {
+  if (price === null || price === undefined || price === "") return "";
+  const num = parseInt(price, 10);
+  if (isNaN(num)) return price;
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
 function renderLabels(data) {
@@ -30,21 +50,27 @@ function renderLabels(data) {
   
       const div = document.createElement("div");
       div.className = "label";
+
+      const logoPath = getSelectedLogo();
   
-      const line1 = (row["első_sor"] || "").substring(0, 20);
-  
-      const secondLineText = (row["második_sor"] || "").substring(0, 10);
-  
-      const kiszereles = row["kiszerelés"] || "";
-  
+      const line1 = (row["Első_sor"] || "").substring(0, 20);
+      const secondLineText = (row["Második_sor"] || "").substring(0, 10);
+      const kiszereles = row["Kiszerelés"] || "";
       const ar = row["Ár"] || "";
-  
       const ftPerL = row["Ft/l"] || "";
-  
       const ftPerKg = row["Ft/kg"] || "";
-  
-      const pricePerUnit = ftPerL ? ftPerL + " Ft/l" : ftPerKg ? ftPerKg + " Ft/kg" : "";
-  
+
+      // eldöntjük, melyik egységárat írjuk ki
+      let pricePerUnit = "";
+      let unitLabel = "";
+      if (ftPerL) {
+        pricePerUnit = formatPrice(ftPerL);
+        unitLabel = "Ft/l";
+      } else if (ftPerKg) {
+        pricePerUnit = formatPrice(ftPerKg);
+        unitLabel = "Ft/kg";
+      }
+
       div.innerHTML = `
         <img src="${logoPath}" class="logo">
         <div class="line1">${line1}</div>
@@ -52,48 +78,65 @@ function renderLabels(data) {
           <span class="left">${secondLineText}</span>
         </div>
         <div class="kiszereles">${kiszereles}</div>
-        <div class="line3">${("cikkszám: " + (row["cikkszám"] || "")).substring(0, 20)}</div>
+        <div class="line3">${("cikkszám: " + (row["Cikkszám"] || "")).substring(0, 20)}</div>
+        <div class="barcode-container">
+          <svg class="barcode"></svg>
+        </div>
         <div class="bottom">
             <div class="price-box1">
-            <span class="amount">${ar ? ar : ""},-</span>
-            <span class="unit">Ft</span>
+            <span class="amount">${ar ? formatPrice(ar) : ""}</span>
+            <span class="unit">,- Ft</span>
             </div>
             <div class="price-box2">
-            <span class="amount">
-                ${pricePerUnit ? pricePerUnit.replace(/,? ?Ft(\/l|\/kg)?/, "") : ""},-
-            </span>
-            <span class="unit">
-                ${pricePerUnit ? pricePerUnit.match(/Ft(\/l|\/kg)?/)?.[0] || "" : ""}
-            </span>
+              <span class="amount">${pricePerUnit ? pricePerUnit : ""}</span>
+              <span class="unit">,- ${unitLabel}</span>
             </div>
         </div>
 
       `;
   
       pageDiv.appendChild(div);
+      // Vonalkód generálás az "EAN-13" oszlop alapján
+      const barcodeSVG = div.querySelector(".barcode");
+      const eanCode = row["EAN-13"];
+      if (eanCode) {
+        JsBarcode(barcodeSVG, eanCode.toString(), {
+          format: "EAN13",
+          lineColor: "#000",
+          width: 1,
+          height: 20,
+          displayValue: true,
+          fontSize: 14,
+        });
+      }
     });
+
   }
   
-  
-  
-  
-  
-
   document.addEventListener("DOMContentLoaded", () => {
-    const btn = document.querySelector("#downloadBtn");
-    btn.addEventListener("click", generatePDF);
+    document.querySelector("#downloadBtn").addEventListener("click", generatePDF);
+    document.querySelector("#sablonBtn").addEventListener("click", downloadTemplate);
+  });
 
-    const sablonBtn = document.querySelector("#sablonBtn");
-    sablonBtn.addEventListener("click", downloadTemplate);
-});
+
 
 function generatePDF() {
+    document.querySelectorAll("svg.barcode").forEach(svg => {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(svgBlob);
+
+      const img = document.createElement("img");
+      img.src = url;
+      img.className = svg.className;
+      svg.parentNode.replaceChild(img, svg);
+    });
     let element = document.getElementById("labels");
     let opt = {
       margin: 0,
       filename: "cimkek.pdf",
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
     html2pdf().set(opt).from(element).save();
