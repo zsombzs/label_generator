@@ -56,5 +56,13 @@
   <div id="labels"></div>
   <script type="module" src="script.js"></script>
   <script src="info.js"></script>
+  <script>
+    window.onload = function() {
+      if (!sessionStorage.getItem("reloaded")) {
+        sessionStorage.setItem("reloaded", "true");
+        location.reload();
+      }
+    };
+  </script>
 </body>
 </html>
