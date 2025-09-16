@@ -23,9 +23,9 @@ body {
 
 .alcim-container {
   display: flex;
-  justify-content: center;   /* középre hozza a teljes sort */
-  align-items: center;       /* alcím és ikon középre igazítása függőlegesen */
-  gap: 15px;                 /* térköz az alcím és ikon között */
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
   margin-bottom: 15px;
 }
 
@@ -40,15 +40,15 @@ body {
 
 .label-type {
   display: flex;
-  justify-content: center; /* középre igazítás */
-  gap: 90px; /* távolság a körök között */
+  justify-content: center;
+  gap: 90px;
   margin-bottom: 20px;
   font-weight: bold;
   font-size: calc(0.7vw + 10px);
   background-color: #04a7c877;
   padding: 10px 10px;
-  border-top: 4px solid #edede9;   /* világos csík fent */
-  border-bottom: 4px solid #edede9; /* világos csík lent */
+  border-top: 4px solid #edede9;
+  border-bottom: 4px solid #edede9;
   border-radius: 5px;
 }
 
@@ -91,7 +91,7 @@ body {
 
 .btn {
   font-size: calc(0.7vw + 10px);
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.2;
   font-family: Arial, sans-serif;
   padding: 15px 10px;
@@ -119,16 +119,6 @@ body {
 }
 .controls .btn:nth-of-type(2):hover {
   background: #00b4d8;
-}
-
-@media (max-width: 768px) {
-  .controls {
-    flex-direction: column;
-  }
-  .btn {
-    width: 80%;
-    text-align: center;
-  }
 }
 
 .page {
@@ -217,7 +207,7 @@ body {
 .price-box1,
 .price-box2 {
   display: flex;
-  justify-content: flex-end; /* jobbra igazítjuk a tartalmat */
+  justify-content: flex-end;
   align-items: center;
   position: absolute;
   background-color: #fff;
@@ -248,7 +238,7 @@ body {
   font-size: 14pt;
   text-align: right;
   flex-shrink: 0;
-  min-width: 60px;   /* fix vagy min. szélesség, hogy a számjegyek balra bővüljenek */
+  min-width: 60px;
 }
 
 .price-box1 .unit {
@@ -262,7 +252,7 @@ body {
   font-size: 8pt;
   text-align: right;
   flex-shrink: 0;
-  min-width: 60px;   /* fix vagy min. szélesség, hogy a számjegyek balra bővüljenek */
+  min-width: 60px;
 }
 
 .price-box2 .unit {

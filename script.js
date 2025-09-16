@@ -59,16 +59,29 @@ function renderLabels(data) {
       const ar = row["Ár"] || "";
       const ftPerL = row["Ft/l"] || "";
       const ftPerKg = row["Ft/kg"] || "";
-
-      // eldöntjük, melyik egységárat írjuk ki
+      
+      // Árak formázása és egységár címke meghatározása
+      let price = "";
       let pricePerUnit = "";
       let unitLabel = "";
-      if (ftPerL) {
-        pricePerUnit = formatPrice(ftPerL);
-        unitLabel = "Ft/l";
-      } else if (ftPerKg) {
-        pricePerUnit = formatPrice(ftPerKg);
-        unitLabel = "Ft/kg";
+      if (ar !== "") {
+        // Ha van ár
+        price = formatPrice(ar);
+        if (ftPerL !== "") {
+          pricePerUnit = formatPrice(ftPerL);
+          unitLabel = "Ft/l";
+        } else if (ftPerKg !== "") {
+          pricePerUnit = formatPrice(ftPerKg);
+          unitLabel = "Ft/kg";
+        }
+      } else {
+        // Ha nincs ár
+        price = "";
+        if (kiszereles.match(/ml|l/i)) {
+          unitLabel = "Ft/l";
+        } else if (kiszereles.match(/g|kg/i)) {
+          unitLabel = "Ft/kg";
+        }
       }
 
       div.innerHTML = `
@@ -84,19 +97,18 @@ function renderLabels(data) {
         </div>
         <div class="bottom">
             <div class="price-box1">
-            <span class="amount">${ar ? formatPrice(ar) : ""}</span>
+            <span class="amount">${price}</span>
             <span class="unit">,- Ft</span>
             </div>
             <div class="price-box2">
-              <span class="amount">${pricePerUnit ? pricePerUnit : ""}</span>
-              <span class="unit">,- ${unitLabel}</span>
+              <span class="amount">${pricePerUnit}</span>
+              <span class="unit">${unitLabel ? ",- " + unitLabel : ""}</span>
             </div>
         </div>
-
-      `;
+      `;``
   
       pageDiv.appendChild(div);
-      // Vonalkód generálás az "EAN-13" oszlop alapján
+      // "EAN-13"
       const barcodeSVG = div.querySelector(".barcode");
       const eanCode = row["EAN-13"];
       if (eanCode) {
